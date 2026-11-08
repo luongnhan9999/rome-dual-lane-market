@@ -1,0 +1,22 @@
+{
+  "network": "hardhat",
+  "chainId": 31337,
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "timestamp": "2026-11-08T09:00:09.049Z",
+  "contracts": {
+    "USDC": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "RomeOracleGateway": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "RomeMarketVault": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    "PredictionEngine": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+    "PerpsPositionManager": "0x0165878A594ca255338adfa4d48449f69242Eb8F"
+  },
+  "feeds": {
+    "PYTH_BTC_USD": "0xe62df6e07101a35b130e9d8b2e63d773c0a37e4647f0e37b138bee4e9e8c616c",
+    "PYTH_SOL_USD": "0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d"
+  },
+  "precompiles": {
+    "CPI_PROGRAM": "0xFF00000000000000000000000000000000000008",
+    "SYSTEM_PROGRAM": "0xFF00000000000000000000000000000000000007",
+    "HELPER_PROGRAM": "0xFF00000000000000000000000000000000000009"
+  }
+}
