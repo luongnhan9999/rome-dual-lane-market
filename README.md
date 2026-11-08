@@ -2,6 +2,9 @@
 
 A production-grade, Rome-native Dual-Lane Prediction Market & Mini-Perpetuals protocol built for **Rome Protocol's Hadrian Testnet** (Chain ID: `200010`) and migrating to **Rubicon Mainnet** (Chain ID: `7531`).
 
+- **Live DApp on Vercel:** [https://frontend-lyart-eight-10.vercel.app](https://frontend-lyart-eight-10.vercel.app)
+- **GitHub Repository:** [https://github.com/luongnhan9999/rome-dual-lane-market](https://github.com/luongnhan9999/rome-dual-lane-market)
+
 ---
 
 ## 1. Project Overview & Value Proposition
