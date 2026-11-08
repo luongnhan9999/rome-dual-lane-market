@@ -116,14 +116,14 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rome-gold/10 border border-rome-gold/30 text-rome-gold text-xs font-semibold mb-3">
                 <Sparkles className="w-3.5 h-3.5" />
-                Rome Single-State & Oracle Gateway Protocol
+                Janus Protocol • Single-State & Oracle Gateway
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                Dual-Lane Prediction & Mini-Perps Terminal
+                Janus Dual-Lane Terminal
               </h1>
               <p className="text-sm text-gray-400 mt-1 max-w-2xl">
-                Trade prediction shares and leveraged perps simultaneously with MetaMask (EVM) and
-                Phantom (Solana). Single shared-state vault with real-time Pyth CPI oracles.
+                Trade prediction shares and 10x leveraged perps simultaneously with MetaMask (EVM) and
+                Phantom (Solana). Single shared-state vault with real-time Pyth CPI oracles on Rome Protocol.
               </p>
             </div>
 
@@ -410,7 +410,7 @@ export default function Home() {
       <footer className="border-t border-rome-border/80 bg-black/60 py-6 mt-12 text-xs text-gray-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-rome-gold font-bold">Rome Arena Builder</span>
+            <span className="text-rome-gold font-bold">Janus Market</span>
             <span>•</span>
             <span>Hadrian Testnet (Chain ID 200010)</span>
           </div>

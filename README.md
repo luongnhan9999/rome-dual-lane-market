@@ -1,8 +1,9 @@
-# Rome Dual-Lane Prediction & Perps Market (Single State & Oracle Gateway)
+# Janus Market — Dual-Lane Prediction & Perps DEX
 
 A production-grade, Rome-native Dual-Lane Prediction Market & Mini-Perpetuals protocol built for **Rome Protocol's Hadrian Testnet** (Chain ID: `200010`) and migrating to **Rubicon Mainnet** (Chain ID: `7531`).
 
-- **Live DApp on Vercel:** [https://frontend-lyart-eight-10.vercel.app](https://frontend-lyart-eight-10.vercel.app)
+- **Brand:** **Janus Market** *(Named after Janus, the two-faced Roman god of dualities and gates — embodying the convergence of EVM & Solana)*
+- **Live DApp on Vercel:** [https://janus-rome.vercel.app](https://janus-rome.vercel.app)
 - **GitHub Repository:** [https://github.com/luongnhan9999/rome-dual-lane-market](https://github.com/luongnhan9999/rome-dual-lane-market)
 
 ---

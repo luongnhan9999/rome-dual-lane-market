@@ -20,13 +20,13 @@ export function Navbar() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-black text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500">
-                  ROME
+                  JANUS
                 </span>
                 <span className="text-xs uppercase px-1.5 py-0.5 rounded bg-rome-gold/15 text-rome-gold font-bold tracking-wider border border-rome-gold/30">
                   Dual-Lane
                 </span>
               </div>
-              <p className="text-[10px] text-gray-400">Prediction Market & Perps DEX</p>
+              <p className="text-[10px] text-gray-400">Prediction & Perps DEX</p>
             </div>
           </div>
 

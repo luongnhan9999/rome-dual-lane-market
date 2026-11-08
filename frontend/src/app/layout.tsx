@@ -36,6 +36,15 @@ export default function RootLayout({
 
   return (
     <html lang="en" className="dark">
+      <head>
+        <title>Janus Market — Dual-Lane Prediction & Perps DEX</title>
+        <meta
+          name="description"
+          content="Janus Protocol: Single-state liquidity and Pyth CPI oracle gateway uniting EVM and Solana on Rome Protocol"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className="min-h-screen bg-[#0B0C10] text-gray-100 antialiased selection:bg-rome-gold selection:text-black">
         <WagmiProvider config={wagmiConfig}>
           <QueryClientProvider client={queryClient}>
