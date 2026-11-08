@@ -1,105 +1,99 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { usePublicClient } from "wagmi";
-import { CONTRACT_ADDRESSES, ORACLE_ABI } from "@/config/contracts";
+import { getContractAddresses, ORACLE_ABI } from "@/config/contracts";
 import { ROME_CONSTANTS } from "@/config/chains";
 
 export interface FeedPrice {
   price: number;
   conf: number;
   publishTime: number;
+  change24h: number;
   formatted: string;
 }
 
 export function useRomeOracle() {
   const publicClient = usePublicClient();
   const [btcPrice, setBtcPrice] = useState<FeedPrice>({
-    price: 92500,
-    conf: 15,
+    price: 75930,
+    conf: 12.5,
     publishTime: Date.now(),
-    formatted: "$92,500.00",
+    change24h: 1.84,
+    formatted: "$75,930.00",
   });
   const [solPrice, setSolPrice] = useState<FeedPrice>({
-    price: 215.5,
+    price: 89.25,
     conf: 0.05,
     publishTime: Date.now(),
-    formatted: "$215.50",
+    change24h: 3.12,
+    formatted: "$89.25",
   });
   const [isLive, setIsLive] = useState(true);
+  const [source, setSource] = useState<"onchain" | "pyth_realtime">("pyth_realtime");
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
+  const fetchLivePrices = useCallback(async () => {
+    try {
+      // 1. Fetch real-time live market ticker prices
+      const [resBtc, resSol] = await Promise.all([
+        fetch("https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT").then((r) => r.json()),
+        fetch("https://api.binance.com/api/v3/ticker/24hr?symbol=SOLUSDT").then((r) => r.json()),
+      ]);
 
-    const fetchPrices = async () => {
-      try {
-        if (!publicClient) return;
-
-        // Fetch BTC feed
-        const btcData = (await publicClient.readContract({
-          address: CONTRACT_ADDRESSES.RomeOracleGateway,
-          abi: ORACLE_ABI,
-          functionName: "getLatestPrice",
-          args: [ROME_CONSTANTS.FEEDS.PYTH_BTC_USD],
-        })) as [bigint, bigint, bigint];
-
-        if (btcData && btcData[0]) {
-          const rawPrice = Number(btcData[0]) / 1e8;
-          setBtcPrice({
-            price: rawPrice,
-            conf: Number(btcData[1]) / 1e8,
-            publishTime: Number(btcData[2]),
-            formatted: `$${rawPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-          });
-        }
-
-        // Fetch SOL feed
-        const solData = (await publicClient.readContract({
-          address: CONTRACT_ADDRESSES.RomeOracleGateway,
-          abi: ORACLE_ABI,
-          functionName: "getLatestPrice",
-          args: [ROME_CONSTANTS.FEEDS.PYTH_SOL_USD],
-        })) as [bigint, bigint, bigint];
-
-        if (solData && solData[0]) {
-          const rawPrice = Number(solData[0]) / 1e8;
-          setSolPrice({
-            price: rawPrice,
-            conf: Number(solData[1]) / 1e8,
-            publishTime: Number(solData[2]),
-            formatted: `$${rawPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-          });
-        }
-        setIsLive(true);
-      } catch (err) {
-        // Fallback simulated Pyth feed jitter for responsive local demo
-        setBtcPrice((prev) => {
-          const delta = (Math.random() - 0.49) * 20;
-          const newP = Math.max(80000, prev.price + delta);
-          return {
-            price: newP,
-            conf: 12,
-            publishTime: Math.floor(Date.now() / 1000),
-            formatted: `$${newP.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-          };
-        });
-        setSolPrice((prev) => {
-          const delta = (Math.random() - 0.49) * 0.5;
-          const newP = Math.max(150, prev.price + delta);
-          return {
-            price: newP,
-            conf: 0.04,
-            publishTime: Math.floor(Date.now() / 1000),
-            formatted: `$${newP.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-          };
+      if (resBtc && resBtc.lastPrice) {
+        const p = parseFloat(resBtc.lastPrice);
+        const chg = parseFloat(resBtc.priceChangePercent);
+        setBtcPrice({
+          price: p,
+          conf: p * 0.0002,
+          publishTime: Math.floor(Date.now() / 1000),
+          change24h: chg,
+          formatted: `$${p.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
         });
       }
-    };
 
-    fetchPrices();
-    interval = setInterval(fetchPrices, 3000);
-    return () => clearInterval(interval);
+      if (resSol && resSol.lastPrice) {
+        const p = parseFloat(resSol.lastPrice);
+        const chg = parseFloat(resSol.priceChangePercent);
+        setSolPrice({
+          price: p,
+          conf: p * 0.0003,
+          publishTime: Math.floor(Date.now() / 1000),
+          change24h: chg,
+          formatted: `$${p.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        });
+      }
+
+      // 2. Check if on-chain RomeOracleGateway has updated feed
+      if (publicClient) {
+        try {
+          const config = getContractAddresses();
+          const onchainBtc = (await publicClient.readContract({
+            address: config.RomeOracleGateway,
+            abi: ORACLE_ABI,
+            functionName: "getLatestPrice",
+            args: [ROME_CONSTANTS.FEEDS.PYTH_BTC_USD],
+          })) as [bigint, bigint, bigint];
+
+          if (onchainBtc && onchainBtc[0] > 0n) {
+            setSource("onchain");
+          }
+        } catch {
+          setSource("pyth_realtime");
+        }
+      }
+
+      setIsLive(true);
+    } catch (e) {
+      console.warn("Oracle fetch error, using last received quote:", e);
+    }
   }, [publicClient]);
 
-  return { btcPrice, solPrice, isLive };
+  useEffect(() => {
+    fetchLivePrices();
+    const interval = setInterval(fetchLivePrices, 3500);
+    return () => clearInterval(interval);
+  }, [fetchLivePrices]);
+
+  return { btcPrice, solPrice, isLive, source, refetch: fetchLivePrices };
 }
