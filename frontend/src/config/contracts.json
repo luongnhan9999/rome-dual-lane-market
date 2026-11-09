@@ -1,14 +1,13 @@
 {
-  "network": "hardhat",
-  "chainId": 31337,
-  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-  "timestamp": "2026-11-08T09:00:09.049Z",
+  "network": "hadrian",
+  "chainId": 200010,
+  "timestamp": "2026-11-09T16:25:49.000Z",
   "contracts": {
-    "USDC": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-    "RomeOracleGateway": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-    "RomeMarketVault": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    "PredictionEngine": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-    "PerpsPositionManager": "0x0165878A594ca255338adfa4d48449f69242Eb8F"
+    "USDC": "0x3c6876c01406217ba81f35169a082b75107a8ef1",
+    "RomeMarketVault": "0x270f0738793c5c958a95bb823720f82b45147a29",
+    "PredictionEngine": "0x16bcdc218f5fc823ebcf895acd602061a1a0f3f9",
+    "PerpsPositionManager": "0x0e5dfca3fbbd3c66f4731a23c665acac0d56e284",
+    "RomeOracleGateway": "0x3904e125387e5231a58a6b6398bcb7610010fc8b"
   },
   "feeds": {
     "PYTH_BTC_USD": "0xe62df6e07101a35b130e9d8b2e63d773c0a37e4647f0e37b138bee4e9e8c616c",

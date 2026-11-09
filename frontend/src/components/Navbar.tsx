@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { WalletConnectors } from "./WalletConnectors";
 import { FaucetButton } from "./FaucetButton";
-import { ContractDeployerModal } from "./ContractDeployerModal";
 import { useRomeOracle } from "@/hooks/useRomeOracle";
-import { Zap, Activity, Rocket, Layers } from "lucide-react";
+import { Zap, Activity } from "lucide-react";
 
 export function Navbar() {
   const { btcPrice, solPrice } = useRomeOracle();
-  const [isDeployModalOpen, setIsDeployModalOpen] = useState(false);
 
   return (
     <>
@@ -60,16 +58,6 @@ export function Navbar() {
 
           {/* Action Tools & Connectors */}
           <div className="flex items-center gap-2.5">
-            {/* Deploy Contracts Button */}
-            <button
-              onClick={() => setIsDeployModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-amber-500/15 border border-rome-gold/40 text-rome-gold hover:bg-amber-500/25 transition shadow-sm"
-              title="Deploy your own Janus Market contracts on Hadrian Testnet"
-            >
-              <Rocket className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Deploy Suite</span>
-            </button>
-
             {/* Faucet Button */}
             <FaucetButton />
 
@@ -78,12 +66,6 @@ export function Navbar() {
           </div>
         </div>
       </header>
-
-      {/* Contract Deployer Modal */}
-      <ContractDeployerModal
-        isOpen={isDeployModalOpen}
-        onClose={() => setIsDeployModalOpen(false)}
-      />
     </>
   );
 }

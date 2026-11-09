@@ -9,11 +9,11 @@ export interface ContractAddressConfig {
 }
 
 const DEFAULT_ADDRESSES: ContractAddressConfig = {
-  USDC: (contractsJson.contracts?.USDC || "0x5FbDB2315678afecb367f032d93F642f64180aa3") as `0x${string}`,
-  RomeMarketVault: (contractsJson.contracts?.RomeMarketVault || "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9") as `0x${string}`,
-  PredictionEngine: (contractsJson.contracts?.PredictionEngine || "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707") as `0x${string}`,
-  PerpsPositionManager: (contractsJson.contracts?.PerpsPositionManager || "0x0165878A594ca255338adfa4d48449f69242Eb8F") as `0x${string}`,
-  RomeOracleGateway: (contractsJson.contracts?.RomeOracleGateway || "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512") as `0x${string}`,
+  USDC: (contractsJson.contracts?.USDC || "0x3c6876c01406217ba81f35169a082b75107a8ef1") as `0x${string}`,
+  RomeMarketVault: (contractsJson.contracts?.RomeMarketVault || "0x270f0738793c5c958a95bb823720f82b45147a29") as `0x${string}`,
+  PredictionEngine: (contractsJson.contracts?.PredictionEngine || "0x16bcdc218f5fc823ebcf895acd602061a1a0f3f9") as `0x${string}`,
+  PerpsPositionManager: (contractsJson.contracts?.PerpsPositionManager || "0x0e5dfca3fbbd3c66f4731a23c665acac0d56e284") as `0x${string}`,
+  RomeOracleGateway: (contractsJson.contracts?.RomeOracleGateway || "0x3904e125387e5231a58a6b6398bcb7610010fc8b") as `0x${string}`,
 };
 
 export function getContractAddresses(): ContractAddressConfig {

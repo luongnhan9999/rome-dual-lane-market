@@ -309,9 +309,8 @@ export default function Home() {
                 <TrendingUp className="w-12 h-12 text-rome-gold/60 mx-auto" />
                 <h3 className="text-lg font-bold text-white">No Active Prediction Markets Found</h3>
                 <p className="text-xs text-gray-400 max-w-md mx-auto leading-relaxed">
-                  You are connected to Rome Hadrian Testnet. Create the very first on-chain
-                  prediction market or deploy the full smart contract suite using the button in the
-                  navigation bar.
+                  You are connected to Rome Hadrian Testnet. Click the button below to create an
+                  on-chain prediction market or choose from active markets.
                 </p>
                 <div className="pt-2">
                   <button
