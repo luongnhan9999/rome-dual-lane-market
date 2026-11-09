@@ -4,7 +4,7 @@ export const hadrianTestnet = defineChain({
   id: 200010,
   name: "Rome Hadrian Testnet",
   nativeCurrency: {
-    decimals: 6,
+    decimals: 18,
     name: "USD Coin",
     symbol: "USDC",
   },

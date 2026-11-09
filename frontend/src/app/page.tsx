@@ -35,6 +35,8 @@ export default function Home() {
     sessionType,
     accountId,
     evmAddress,
+    isWrongNetwork,
+    switchToHadrian,
     depositCollateral,
     withdrawCollateral,
     openPerpPosition,
@@ -115,6 +117,30 @@ export default function Home() {
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+        {/* Wrong Network Alert Banner */}
+        {isWrongNetwork && (
+          <div className="bg-amber-500/10 border border-amber-500/40 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-200 shadow-lg">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0" />
+              <div>
+                <p className="font-bold text-xs text-amber-300">
+                  Wallet Connected to Unsupported Network
+                </p>
+                <p className="text-[11px] text-gray-400">
+                  Please switch to Rome Hadrian Testnet (Chain ID: 200010) to deploy contracts, mint
+                  faucet USDC, and trade.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => switchToHadrian()}
+              className="px-4 py-2 rounded-lg text-xs font-bold bg-amber-500 hover:bg-amber-400 text-black flex items-center gap-1.5 flex-shrink-0 transition shadow-md"
+            >
+              Switch to Rome Hadrian
+            </button>
+          </div>
+        )}
+
         {/* Hero Section & Architecture Highlights */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-rome-surfaceLight via-[#1A1822] to-rome-surfaceLight border border-rome-border p-6 shadow-2xl">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">

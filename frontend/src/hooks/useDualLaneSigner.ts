@@ -14,7 +14,7 @@ import {
 export type SessionType = "evm" | "solana" | "none";
 
 export function useDualLaneSigner() {
-  const { address: evmAddress, isConnected: isEvmConnected } = useAccount();
+  const { address: evmAddress, isConnected: isEvmConnected, chain } = useAccount();
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
 
@@ -22,6 +22,47 @@ export function useDualLaneSigner() {
 
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Network check
+  const isWrongNetwork = Boolean(isEvmConnected && chain && chain.id !== 200010);
+
+  // Switch or Add Rome Hadrian Testnet (200010)
+  const switchToHadrian = async () => {
+    if (typeof window !== "undefined" && (window as any).ethereum) {
+      try {
+        await (window as any).ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0x30d4a" }],
+        });
+      } catch (switchError: any) {
+        // Error code 4902 indicates chain has not been added to MetaMask
+        if (
+          switchError?.code === 4902 ||
+          switchError?.message?.includes("Unrecognized chain") ||
+          switchError?.message?.includes("wallet_addEthereumChain")
+        ) {
+          await (window as any).ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainId: "0x30d4a",
+                chainName: "Rome Hadrian Testnet",
+                nativeCurrency: {
+                  name: "USD Coin",
+                  symbol: "USDC",
+                  decimals: 18,
+                },
+                rpcUrls: ["https://hadrian.testnet.romeprotocol.xyz/"],
+                blockExplorerUrls: ["https://via-hadrian.testnet.romeprotocol.xyz/"],
+              },
+            ],
+          });
+        } else {
+          throw switchError;
+        }
+      }
+    }
+  };
 
   // Active Session Type
   const sessionType: SessionType = useMemo(() => {
@@ -350,6 +391,9 @@ export function useDualLaneSigner() {
     displayAddress,
     isEvmConnected,
     isSolanaConnected,
+    chain,
+    isWrongNetwork,
+    switchToHadrian,
     isPending,
     error,
     mintFaucet,

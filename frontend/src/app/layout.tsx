@@ -6,8 +6,8 @@ import "@solana/wallet-adapter-react-ui/styles.css";
 
 import React, { useMemo } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WagmiProvider, createConfig, http } from "wagmi";
-import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
+import { WagmiProvider, http } from "wagmi";
+import { getDefaultConfig, RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
@@ -16,11 +16,14 @@ import { ROME_CONSTANTS } from "@/config/chains";
 
 const queryClient = new QueryClient();
 
-const wagmiConfig = createConfig({
+const wagmiConfig = getDefaultConfig({
+  appName: "Janus Market",
+  projectId: "21fef48091f12692cad574a6f7753643",
   chains: [hadrianTestnet],
   transports: {
     [hadrianTestnet.id]: http("https://hadrian.testnet.romeprotocol.xyz/"),
   },
+  ssr: true,
 });
 
 export default function RootLayout({

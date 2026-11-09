@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { useWalletClient, usePublicClient } from "wagmi";
+import { useWalletClient, usePublicClient, useAccount, useConnect } from "wagmi";
+import { injected } from "wagmi/connectors";
+import { useDualLaneSigner } from "@/hooks/useDualLaneSigner";
 import bytecodesJson from "@/config/contractBytecodes.json";
 import {
   getContractAddresses,
@@ -10,7 +12,16 @@ import {
   ContractAddressConfig,
 } from "@/config/contracts";
 import { ROME_CONSTANTS } from "@/config/chains";
-import { Rocket, CheckCircle2, AlertTriangle, RefreshCw, X, Shield, ExternalLink } from "lucide-react";
+import {
+  Rocket,
+  CheckCircle2,
+  AlertTriangle,
+  RefreshCw,
+  X,
+  Shield,
+  ExternalLink,
+  Cpu,
+} from "lucide-react";
 
 interface ContractDeployerModalProps {
   isOpen: boolean;
@@ -20,12 +31,16 @@ interface ContractDeployerModalProps {
 export function ContractDeployerModal({ isOpen, onClose }: ContractDeployerModalProps) {
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
+  const { isConnected, address } = useAccount();
+  const { connect: connectWagmi } = useConnect();
+  const { isWrongNetwork, switchToHadrian } = useDualLaneSigner();
 
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [logs, setLogs] = useState<string[]>([]);
   const [isDeploying, setIsDeploying] = useState<boolean>(false);
   const [deployedConfig, setDeployedConfig] = useState<ContractAddressConfig | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isSwitching, setIsSwitching] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
@@ -308,32 +323,74 @@ export function ContractDeployerModal({ isOpen, onClose }: ContractDeployerModal
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-rome-border bg-black/40 flex items-center justify-between">
-          <span className="text-xs text-gray-400 font-medium">Network: Rome Hadrian (200010)</span>
-          <div className="flex gap-2">
+        <div className="px-6 py-4 border-t border-rome-border bg-black/40 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs text-gray-400 font-medium">
+            <span>Status:</span>
+            {!isConnected ? (
+              <span className="text-rose-400">Not Connected</span>
+            ) : isWrongNetwork || !walletClient ? (
+              <span className="text-amber-400 font-semibold">Wrong Network (Need Hadrian 200010)</span>
+            ) : (
+              <span className="text-emerald-400 font-semibold">Ready on Rome Hadrian (200010)</span>
+            )}
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
             <button
               onClick={onClose}
               className="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-800 text-gray-300 hover:text-white"
             >
               Close
             </button>
-            <button
-              disabled={isDeploying || !walletClient}
-              onClick={handleDeployAll}
-              className="px-5 py-2 rounded-lg text-xs font-bold bg-rome-gold hover:bg-rome-darkGold text-black flex items-center gap-2 transition disabled:opacity-50"
-            >
-              {isDeploying ? (
-                <>
+
+            {!isConnected ? (
+              <button
+                onClick={() => connectWagmi({ connector: injected() })}
+                className="px-5 py-2 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-2 transition shadow-md"
+              >
+                <Cpu className="w-3.5 h-3.5" />
+                Connect MetaMask
+              </button>
+            ) : isWrongNetwork || !walletClient ? (
+              <button
+                disabled={isSwitching}
+                onClick={async () => {
+                  try {
+                    setIsSwitching(true);
+                    await switchToHadrian();
+                  } catch (e: any) {
+                    setErrorMsg(e?.message || "Failed to switch to Rome Hadrian Testnet");
+                  } finally {
+                    setIsSwitching(false);
+                  }
+                }}
+                className="px-5 py-2 rounded-lg text-xs font-bold bg-amber-500 hover:bg-amber-400 text-black flex items-center gap-2 transition shadow-md"
+              >
+                {isSwitching ? (
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  Deploying Step {currentStep}/5...
-                </>
-              ) : (
-                <>
-                  <Rocket className="w-3.5 h-3.5" />
-                  Deploy All Contracts
-                </>
-              )}
-            </button>
+                ) : (
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                )}
+                {isSwitching ? "Switching..." : "Switch to Rome Hadrian"}
+              </button>
+            ) : (
+              <button
+                disabled={isDeploying}
+                onClick={handleDeployAll}
+                className="px-5 py-2 rounded-lg text-xs font-bold bg-rome-gold hover:bg-rome-darkGold text-black flex items-center gap-2 transition disabled:opacity-50 shadow-md"
+              >
+                {isDeploying ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    Deploying Step {currentStep}/5...
+                  </>
+                ) : (
+                  <>
+                    <Rocket className="w-3.5 h-3.5" />
+                    Deploy All Contracts
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>
